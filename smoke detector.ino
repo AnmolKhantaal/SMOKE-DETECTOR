@@ -1,6 +1,10 @@
 #include <LiquidCrystal.h>
 LiquidCrystal lcd(5,6,7,8,9,10);
-
+float temp; 
+float vout; 
+float vout1;   
+int redled = 2;
+int greenled = 3;
 int buzzer = 4;
 int gassensor = A0;
 int sensorThresh = 400;
@@ -8,9 +12,10 @@ int sensorThresh = 400;
 
 void setup()
 {
-
+pinMode(redled, OUTPUT);
+pinMode(greenled,OUTPUT);
 pinMode(buzzer,OUTPUT);
-
+pinMode(A1, INPUT);
 pinMode(gassensor,INPUT);
 Serial.begin(9600);
 lcd.begin(16,2);
@@ -18,10 +23,22 @@ lcd.begin(16,2);
 
 void loop()
 {
-  
+  vout=analogRead(A1);
+  vout1=(vout/1023)*5000;
+  temp=(vout1-500)/10;
   int analogValue = analogRead(gassensor);
   Serial.println(analogValue); 
   
+  if(temp>=70)
+  {
+    digitalWrite(redled,HIGH);
+    digitalWrite(greenled,LOW);
+  }
+  else
+  {
+    digitalWrite(greenled,HIGH);
+    digitalWrite(redled,LOW);
+  }
   
   if(analogValue>sensorThresh)
   {
@@ -51,5 +68,9 @@ void loop()
     lcd.print("SAFE  :)");
     delay(1000);
   }
-   
+  Serial.print("in DegreeC= "); 
+  Serial.print(" "); 
+  Serial.print(temp);
+  Serial.println();
+  delay(500);
 }
