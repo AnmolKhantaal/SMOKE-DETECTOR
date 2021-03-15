@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+//SETUP FUNCTION
 LiquidCrystal lcd(5,6,7,8,9,10);
 float temp; 
 float vout; 
@@ -12,24 +13,24 @@ int sensorThresh = 400;
 
 void setup()
 {
-pinMode(redled, OUTPUT);
+pinMode(redled, OUTPUT);//LED OUTPUT
 pinMode(greenled,OUTPUT);
 pinMode(buzzer,OUTPUT);
-pinMode(A1, INPUT);
+pinMode(A1, INPUT);//TEMPERATURE SENSOR
 pinMode(gassensor,INPUT);
 Serial.begin(9600);
-lcd.begin(16,2);
+lcd.begin(16,2);//LCD(COLUMNS,ROWS)
 }
 
 void loop()
 {
-  vout=analogRead(A1);
+  vout=analogRead(A1);//VOLTAGE OUT FOR TEMPERATURE SENSOR
   vout1=(vout/1023)*5000;
-  temp=(vout1-500)/10;
+  temp=(vout1-500)/10;//FROM VOLTS TO TEMP. IN C
   int analogValue = analogRead(gassensor);
   Serial.println(analogValue); 
   
-  if(temp>=70)
+  if(temp>=70)//CASES FOR TEMP. CONDITIONS
   {
     digitalWrite(redled,HIGH);
     digitalWrite(greenled,LOW);
@@ -40,10 +41,10 @@ void loop()
     digitalWrite(redled,LOW);
   }
   
-  if(analogValue>sensorThresh)
+  if(analogValue>sensorThresh)//SMOKE LEVEL CONDITIONS
   {
     
-    tone(buzzer,1000,1000);
+    tone(buzzer,1000,1000);//BUZZER(tone)
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Smoke Level:");
